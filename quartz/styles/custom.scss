@@ -1,0 +1,139 @@
+@use "./variables.scss" as *;
+
+// Supreme, self-hosted from quartz/static/fonts (fontshare.com/fonts/supreme)
+@font-face {
+  font-family: "Supreme";
+  src: url("static/fonts/Supreme-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Supreme";
+  src: url("static/fonts/Supreme-Italic.woff2") format("woff2");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Supreme";
+  src: url("static/fonts/Supreme-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+// Everything lowercase, except code
+body {
+  text-transform: lowercase;
+}
+
+code,
+pre {
+  text-transform: none;
+}
+
+// Sunlit: dappled light through blinds and leaves
+// Adapted from github.com/jackyzha0/sunlit. All layers sit behind the page.
+html::before,
+html::after,
+body::before {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+}
+
+// Window blinds shadow. Oversized and rotated so no edge is ever on screen.
+html::before {
+  inset: -60vmax;
+  background: repeating-linear-gradient(
+    to bottom,
+    #1a1917 0,
+    #1a1917 40px,
+    transparent 40px,
+    transparent 100px
+  );
+  opacity: 0.18;
+  transform: rotate(-5deg);
+  mask-image: linear-gradient(to left, black 25%, transparent 70%);
+}
+
+// Leaf shadow, swaying. The png is black leaves on white, so multiply
+// drops the white and keeps only the leaves.
+html::after {
+  top: -200px;
+  right: -400px;
+  width: 1800px;
+  height: 1200px;
+  background: url("static/leaves.png") center / cover no-repeat;
+  mix-blend-mode: multiply;
+  opacity: 0.4;
+  filter: blur(2px);
+  mask-image: radial-gradient(ellipse at center, black 45%, transparent 72%);
+  animation: sunlit-billow 16s ease-in-out infinite;
+}
+
+// Warm glow bouncing off the wall
+body::before {
+  inset: 0;
+  background:
+    linear-gradient(309deg, #f5d7a6, #f5d7a6 20%, transparent),
+    linear-gradient(355deg, #f5d7a6 0%, transparent 30%);
+  opacity: 0.35;
+}
+
+// Gentle sway. Scale never drops below 1 so the image edges stay off screen.
+@keyframes sunlit-billow {
+  0% {
+    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1.05);
+  }
+  25% {
+    transform: perspective(400px) rotateX(0.5deg) rotateY(1deg) scale(1.07);
+  }
+  50% {
+    transform: perspective(400px) rotateX(-1deg) rotateY(-1deg) scale(1.05);
+  }
+  75% {
+    transform: perspective(400px) rotateX(0.5deg) rotateY(-0.5deg) scale(1.08);
+  }
+  100% {
+    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1.05);
+  }
+}
+
+// Footer: hide the "Created with Quartz" line, keep only my links
+footer > p:first-child {
+  display: none;
+}
+
+// Footer links are pinned to the bottom right of the screen.
+// !important because the page grid sets footer width and margins with higher specificity.
+footer {
+  position: fixed !important;
+  bottom: 1.25rem !important;
+  right: 1.5rem !important;
+  left: auto !important;
+  width: max-content !important;
+  min-width: 0 !important;
+  max-width: none !important;
+  margin: 0 !important;
+  text-align: right;
+}
+
+footer ul {
+  justify-content: flex-end;
+  margin-top: 0;
+}
+
+// Hide the link icon that appears next to headings on hover
+a[role="anchor"] {
+  display: none !important;
+}
+
+// Text selected with the mouse
+::selection {
+  background-color: #cfe1ef;
+}
