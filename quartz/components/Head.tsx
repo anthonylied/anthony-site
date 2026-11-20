@@ -90,6 +90,8 @@ export default (() => {
         )}
 
         <link rel="icon" href={iconPath} />
+        <script src={joinSegments(baseDir, "static/lightbox.js")} defer></script>
+        <script src={joinSegments(baseDir, "static/theme-fade.js")} defer></script>
         <meta name="description" content={description} />
         <meta name="generator" content="Quartz" />
 

@@ -19,7 +19,7 @@ configuration:
       header: Supreme
       body: Supreme
       code: IBM Plex Mono
-    # Both modes use the same white theme
+    # Light mode: warm white. Dark mode: the same warm tones, inverted.
     colors:
       lightMode: &white
         light: "#fffdfa"
@@ -31,7 +31,16 @@ configuration:
         tertiary: "#2e2c28"
         highlight: "#cfe1ef"
         textHighlight: "transparent"
-      darkMode: *white
+      darkMode:
+        light: "#1a1917"
+        lightgray: "#2e2c28"
+        gray: "#6e695f"
+        darkgray: "#d9d4ca"
+        dark: "#f2eee6"
+        secondary: "#b8b1a4"
+        tertiary: "#e6e2da"
+        highlight: "#2a3a48"
+        textHighlight: "transparent"
   links:
     markdownLinkResolution: shortest
   contentIndex:
@@ -177,7 +186,7 @@ plugins:
       position: left
       priority: 10
   - source: "@quartz-community/darkmode"
-    enabled: false
+    enabled: true
     layout:
       position: left
       priority: 30
@@ -213,7 +222,16 @@ plugins:
       position: footer
       priority: 50
   - source: "@quartz-community/recent-notes"
-    enabled: false
+    enabled: true
+    options:
+      title: recent
+      limit: 3
+      showTags: false
+      hideFolderPages: true
+      hideTagPages: true
+    layout:
+      position: left
+      priority: 40
   - source: "@quartz-community/spacer"
     enabled: true
     options: {}

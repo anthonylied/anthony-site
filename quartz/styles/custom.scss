@@ -47,6 +47,22 @@ html::before {
   background: url("static/sunlit.webp") center / cover no-repeat;
 }
 
+// Dark mode: a dark layer over the sunlight that fades in and out.
+// Fading opacity is cheap; fading the background image itself isn't possible.
+html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgba(26, 25, 23, 0.88);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+html[saved-theme="dark"]::after {
+  opacity: 1;
+}
+
 // Footer: hide the "Created with Quartz" line, keep only my links
 footer > p:first-child {
   display: none;
@@ -78,5 +94,85 @@ a[role="anchor"] {
 
 // Text selected with the mouse
 ::selection {
-  background-color: #cfe1ef;
+  background-color: var(--highlight);
+}
+
+// Float an image to one side with text wrapping around it.
+// In a note: ![[photo.jpg|right|300]] or ![[photo.jpg|left|300]]
+img[alt="right"],
+img[alt="left"] {
+  max-width: 50%;
+  margin-top: 0.25rem;
+  margin-bottom: 1rem;
+}
+img[alt="right"] {
+  float: right;
+  margin-left: 1.5rem;
+}
+img[alt="left"] {
+  float: left;
+  margin-right: 1.5rem;
+}
+// On phones there's no room beside the image, so stack it normally
+@media (max-width: 600px) {
+  img[alt="right"],
+  img[alt="left"] {
+    float: none;
+    display: block;
+    max-width: 100%;
+    margin: 1rem auto;
+  }
+}
+
+// Click-to-enlarge images (script: quartz/static/lightbox.js)
+article img:not(a img) {
+  cursor: zoom-in;
+}
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: zoom-out;
+  animation: lightbox-in 0.15s ease-out;
+}
+.lightbox img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px;
+  float: none;
+  margin: 0;
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+  }
+}
+
+// Fade colors when switching light/dark. The class is only on for the moment of the
+// switch (quartz/static/theme-fade.js), so pages don't animate when they first load.
+html.theme-fading,
+html.theme-fading *,
+html.theme-fading *::before,
+html.theme-fading *::after {
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    border-color 0.4s ease,
+    fill 0.4s ease,
+    stroke 0.4s ease !important;
+}
+
+// Dark mode button pinned to the top right of the screen
+.darkmode {
+  position: fixed !important;
+  top: calc(env(safe-area-inset-top, 0px) + 1.25rem);
+  right: 1.5rem;
+  z-index: 100;
+  margin: 0 !important;
 }
