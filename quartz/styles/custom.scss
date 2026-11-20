@@ -35,71 +35,16 @@ pre {
   text-transform: none;
 }
 
-// Sunlit: dappled light through blinds and leaves
-// Adapted from github.com/jackyzha0/sunlit. All layers sit behind the page.
-html::before,
-html::after,
-body::before {
+// Sunlit: dappled light through blinds and leaves.
+// Adapted from github.com/jackyzha0/sunlit. The blinds, leaves and warm glow are
+// pre-rendered into one flat image, so the browser has nothing to blend or animate.
+html::before {
   content: "";
   position: fixed;
-  pointer-events: none;
-  z-index: -1;
-}
-
-// Window blinds shadow. Oversized and rotated so no edge is ever on screen.
-html::before {
-  inset: -35vmax;
-  background: repeating-linear-gradient(
-    to bottom,
-    #1a1917 0,
-    #1a1917 40px,
-    transparent 40px,
-    transparent 100px
-  );
-  opacity: 0.18;
-  transform: rotate(-5deg);
-  mask-image: linear-gradient(to left, black 25%, transparent 70%);
-}
-
-// Leaf shadow, swaying. The png is pre-baked (transparent, edges faded) so the
-// browser only has to move one flat layer: no blend mode, blur or mask.
-html::after {
-  top: -200px;
-  right: -400px;
-  width: 1800px;
-  height: 1200px;
-  background: url("static/leaves-shadow.png") center / cover no-repeat;
-  opacity: 0.4;
-  will-change: transform;
-  animation: sunlit-billow 16s ease-in-out infinite;
-}
-
-// Warm glow bouncing off the wall
-body::before {
   inset: 0;
-  background:
-    linear-gradient(309deg, #f5d7a6, #f5d7a6 20%, transparent),
-    linear-gradient(355deg, #f5d7a6 0%, transparent 30%);
-  opacity: 0.35;
-}
-
-// Gentle sway. Scale never drops below 1 so the image edges stay off screen.
-@keyframes sunlit-billow {
-  0% {
-    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1.05);
-  }
-  25% {
-    transform: perspective(400px) rotateX(0.5deg) rotateY(1deg) scale(1.07);
-  }
-  50% {
-    transform: perspective(400px) rotateX(-1deg) rotateY(-1deg) scale(1.05);
-  }
-  75% {
-    transform: perspective(400px) rotateX(0.5deg) rotateY(-0.5deg) scale(1.08);
-  }
-  100% {
-    transform: perspective(400px) rotateX(0deg) rotateY(0deg) scale(1.05);
-  }
+  z-index: -1;
+  pointer-events: none;
+  background: url("static/sunlit.webp") center / cover no-repeat;
 }
 
 // Footer: hide the "Created with Quartz" line, keep only my links
@@ -134,10 +79,4 @@ a[role="anchor"] {
 // Text selected with the mouse
 ::selection {
   background-color: #cfe1ef;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html::after {
-    animation: none;
-  }
 }
