@@ -232,6 +232,7 @@ plugins:
     layout:
       position: left
       priority: 40
+      display: desktop-only
   - source: "@quartz-community/spacer"
     enabled: true
     options: {}

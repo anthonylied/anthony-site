@@ -292,15 +292,11 @@ html.theme-fading *::after {
 .album {
   --album-height: min(60vh, 480px);
 }
-// The frame hugs the current photo: fixed height, width of the photo
+// The frame hugs the current photo exactly, so the arrows and counter always sit on it
 .album-stage {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: fit-content;
   max-width: 100%;
-  height: var(--album-height);
   margin-inline: auto;
   touch-action: pan-y;
   border-radius: 8px;
@@ -314,7 +310,7 @@ html.theme-fading *::after {
   width: auto;
   height: auto;
   max-width: 100%;
-  max-height: 100%;
+  max-height: var(--album-height);
   margin: 0;
   border-radius: 8px;
   animation: album-fade 0.25s ease-out;
@@ -419,4 +415,34 @@ html.theme-fading *::after {
   margin: 0;
   border-radius: 4px;
   cursor: pointer;
+}
+
+// Phones (Quartz's phone layout starts at 800px wide).
+// `html` in front outranks the explorer plugin's own phone styles.
+@media (max-width: 800px) {
+  // The top bar: one slim row of menu, name, search and dark mode
+  html .page > #quartz-body .sidebar.left:has(.explorer) {
+    padding: 0.5rem 0;
+    gap: 0.75rem;
+  }
+  html .sidebar.left .page-title {
+    margin: 0;
+    font-size: 1.3rem;
+    white-space: nowrap;
+  }
+  // The dark mode button sits in the bar instead of floating over the page
+  .darkmode {
+    position: static !important;
+    margin-right: 0.25rem !important;
+  }
+  // Footer links at the end of the page instead of pinned over the text
+  footer {
+    position: static !important;
+    width: auto !important;
+    margin: 3rem 0 1.5rem !important;
+    text-align: center;
+  }
+  footer ul {
+    justify-content: center;
+  }
 }
