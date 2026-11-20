@@ -8,15 +8,15 @@
   let overlay = null
   let photos = [] // the images you can flip through: one, or a whole album
   let index = 0
-  let track = null // the album's slideshow, to sync it when closing
+  let stage = null // the album's slideshow, to sync it when closing
 
   function close() {
     if (!overlay) return
     overlay.remove()
     overlay = null
     document.documentElement.style.overflow = ""
-    if (track && track.albumGo) track.albumGo(index)
-    track = null
+    if (stage && stage.albumGo) stage.albumGo(index)
+    stage = null
   }
 
   function show(i) {
@@ -25,7 +25,7 @@
     const big = overlay.querySelector(".lightbox-img")
     big.src = src.currentSrc || src.src
     big.alt = src.alt
-    const caption = src.closest("figure")?.querySelector("figcaption")?.textContent ?? ""
+    const caption = src.dataset.caption ?? ""
     const cap = overlay.querySelector(".lightbox-caption")
     cap.textContent = caption
     cap.hidden = !caption
@@ -46,8 +46,8 @@
   }
 
   function open(img) {
-    track = img.closest(".album-track")
-    photos = track ? [...track.querySelectorAll("img")] : [img]
+    stage = img.closest(".album-stage")
+    photos = stage ? [...stage.querySelectorAll("img")] : [img]
 
     overlay = document.createElement("div")
     overlay.className = "lightbox"
