@@ -42,6 +42,8 @@
       }
       img.removeAttribute("width")
       img.removeAttribute("height")
+      // Otherwise a mouse swipe starts the browser's "drag this image" and the swipe is lost
+      img.draggable = false
       if (i > 0) img.loading = "lazy"
       stage.appendChild(img)
     })
@@ -109,12 +111,36 @@
 
       prev.addEventListener("click", () => show(index - 1))
       next.addEventListener("click", () => show(index + 1))
-      stage.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") show(index - 1)
-        if (e.key === "ArrowRight") show(index + 1)
-      })
+      // Used by the page-wide arrow key handler below
+      stage.albumStep = (step) => show(index + step)
 
-      // Swipe left/right. A swipe also ends in a click, which must not open the enlarged view.
+      // Two-finger swipe on a trackpad. One swipe = one photo: after flipping, ignore the
+      // rest of that swipe (its momentum keeps sending events) until it goes quiet.
+      let wheelX = 0
+      let wheelQuietTimer = 0
+      let wheelLocked = false
+      stage.addEventListener(
+        "wheel",
+        (e) => {
+          if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return // vertical: let the page scroll
+          e.preventDefault() // also stops the browser's swipe-to-go-back
+          clearTimeout(wheelQuietTimer)
+          wheelQuietTimer = setTimeout(() => {
+            wheelLocked = false
+            wheelX = 0
+          }, 200)
+          if (wheelLocked) return
+          wheelX += e.deltaX
+          if (Math.abs(wheelX) > 30) {
+            show(index + (wheelX > 0 ? 1 : -1))
+            wheelLocked = true
+          }
+        },
+        { passive: false },
+      )
+
+      // Swipe left/right with a finger or mouse. A swipe also ends in a click, which must
+      // not open the enlarged view.
       let startX = null
       let swiped = false
       stage.addEventListener("pointerdown", (e) => (startX = e.clientX))
@@ -144,6 +170,33 @@
   function init() {
     document.querySelectorAll('.callout[data-callout="album"]').forEach(build)
   }
+
+  // Arrow keys flip whichever album you're looking at: the focused one, or else the one
+  // taking up the most of the screen. No clicking into the album first.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return
+    if (e.defaultPrevented || e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return
+    if (document.querySelector(".lightbox")) return // the enlarged view handles its own keys
+    const target = e.target
+    if (target.closest && target.closest("input, textarea, select, [contenteditable]")) return
+
+    const stages = [...document.querySelectorAll(".album-stage")].filter((s) => s.albumStep)
+    let stage = stages.find((s) => s.contains(document.activeElement))
+    if (!stage) {
+      let best = 0
+      for (const s of stages) {
+        const r = s.getBoundingClientRect()
+        const visible = Math.min(r.bottom, innerHeight) - Math.max(r.top, 0)
+        if (visible > best) {
+          best = visible
+          stage = s
+        }
+      }
+    }
+    if (!stage) return
+    e.preventDefault()
+    stage.albumStep(e.key === "ArrowRight" ? 1 : -1)
+  })
 
   // Quartz swaps pages without a full reload and fires "nav" each time
   document.addEventListener("nav", init)

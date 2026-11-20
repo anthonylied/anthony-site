@@ -26,10 +26,12 @@
 // Sunlit: dappled light through blinds and leaves.
 // Adapted from github.com/jackyzha0/sunlit. The blinds, leaves and warm glow are
 // pre-rendered into one flat image, so the browser has nothing to blend.
+// Both background layers reach 15% past the top and bottom of the screen: on phones the
+// screen grows when the browser toolbar slides away, and these layers don't resize instantly.
 html::before {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -15vh 0;
   z-index: -1;
   pointer-events: none;
   background: url("static/sunlit.webp") center / cover no-repeat;
@@ -64,7 +66,7 @@ html::before {
 html::after {
   content: "";
   position: fixed;
-  inset: 0;
+  inset: -15vh 0;
   z-index: -1;
   pointer-events: none;
   background: rgba(26, 25, 23, 0.88);
@@ -299,6 +301,8 @@ html.theme-fading *::after {
   max-width: 100%;
   margin-inline: auto;
   touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
   border-radius: 8px;
 }
 .album-stage:focus-visible {
@@ -421,8 +425,10 @@ html.theme-fading *::after {
 // `html` in front outranks the explorer plugin's own phone styles.
 @media (max-width: 800px) {
   // The top bar: one slim row of menu, name, search and dark mode
+  // Full width: stretch across the page's 1rem side padding
   html .page > #quartz-body .sidebar.left:has(.explorer) {
-    padding: 0.5rem 0;
+    margin-inline: -1rem;
+    padding: 0.5rem 1rem;
     gap: 0.75rem;
   }
   html .sidebar.left .page-title {
