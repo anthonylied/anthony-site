@@ -48,7 +48,7 @@ body::before {
 
 // Window blinds shadow. Oversized and rotated so no edge is ever on screen.
 html::before {
-  inset: -60vmax;
+  inset: -35vmax;
   background: repeating-linear-gradient(
     to bottom,
     #1a1917 0,
@@ -61,18 +61,16 @@ html::before {
   mask-image: linear-gradient(to left, black 25%, transparent 70%);
 }
 
-// Leaf shadow, swaying. The png is black leaves on white, so multiply
-// drops the white and keeps only the leaves.
+// Leaf shadow, swaying. The png is pre-baked (transparent, edges faded) so the
+// browser only has to move one flat layer: no blend mode, blur or mask.
 html::after {
   top: -200px;
   right: -400px;
   width: 1800px;
   height: 1200px;
-  background: url("static/leaves.png") center / cover no-repeat;
-  mix-blend-mode: multiply;
+  background: url("static/leaves-shadow.png") center / cover no-repeat;
   opacity: 0.4;
-  filter: blur(2px);
-  mask-image: radial-gradient(ellipse at center, black 45%, transparent 72%);
+  will-change: transform;
   animation: sunlit-billow 16s ease-in-out infinite;
 }
 
@@ -136,4 +134,10 @@ a[role="anchor"] {
 // Text selected with the mouse
 ::selection {
   background-color: #cfe1ef;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html::after {
+    animation: none;
+  }
 }
