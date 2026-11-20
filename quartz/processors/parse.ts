@@ -15,6 +15,7 @@ import { QuartzLogger } from "../util/log"
 import { trace } from "../util/trace"
 import { BuildCtx, WorkerSerializableBuildCtx } from "../util/ctx"
 import { styleText } from "util"
+import { expandFolderAlbums } from "../util/albums"
 import {
   attributeError,
   attributePluggables,
@@ -119,6 +120,9 @@ export function createFileParser(ctx: BuildCtx, fps: FilePath[]) {
 
         // strip leading and trailing whitespace
         file.value = file.value.toString().trim()
+
+        // `folder: <name>` inside an album box -> one line per photo (quartz/util/albums.ts)
+        file.value = expandFolderAlbums(file.value, argv.directory)
 
         // Text -> Text transforms
         for (const plugin of cfg.plugins.transformers.filter((p) => p.textTransform)) {
