@@ -93,6 +93,7 @@ export default (() => {
         <script src={joinSegments(baseDir, "static/lightbox.js")} defer></script>
         <script src={joinSegments(baseDir, "static/theme-fade.js")} defer></script>
         <script src={joinSegments(baseDir, "static/explorer-keep-open.js")} defer></script>
+        <script src={joinSegments(baseDir, "static/recent-collapse.js")} defer></script>
         <script src={joinSegments(baseDir, "static/album.js")} defer></script>
         <meta name="description" content={description} />
         <meta name="generator" content="Quartz" />

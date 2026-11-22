@@ -545,3 +545,28 @@ li.section-li > .section {
     pointer-events: auto;
   }
 }
+
+// "recent posts" box: click the heading to open or close it (quartz/static/recent-collapse.js)
+.recent-notes > h3[role="button"] {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+.recent-notes > h3[role="button"]::after {
+  content: "";
+  width: 0.45em;
+  height: 0.45em;
+  margin-left: 0.6rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  opacity: 0.8;
+  transform: translateY(-0.1em) rotate(45deg);
+  transition: transform 0.3s ease;
+}
+.recent-notes.collapsed > h3[role="button"]::after {
+  transform: translateX(-0.1em) rotate(-45deg);
+}
+.recent-notes.collapsed > ul {
+  display: none;
+}

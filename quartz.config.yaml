@@ -224,7 +224,7 @@ plugins:
   - source: "@quartz-community/recent-notes"
     enabled: true
     options:
-      title: recent
+      title: recent posts
       limit: 3
       showTags: false
       hideFolderPages: true
