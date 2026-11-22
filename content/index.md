@@ -15,4 +15,11 @@ but nothing too crazy, mostly about things I find cool and stuff lol
 - [[trips/index| I plan to add posts about trips]]: it's not really that much
 - [[thoughts/index|thoughts]]: random thoughts? maybe some deep thoughts but I don't really think too deep lol
 
-![is[alt text](images/soto.png)|200]
+## who am i
+
+- i am anthony
+- i am currently 20 years old
+- i attend the university of washington
+- i like sports
+- i like my friends and family
+- i lke cheeling
