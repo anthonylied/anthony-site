@@ -1,5 +1,6 @@
 ---
 title: building this website
+password: anthony
 ---
 
 ![[IMG_9726.jpg|right|220]]

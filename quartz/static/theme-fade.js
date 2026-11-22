@@ -12,7 +12,7 @@
       const root = document.documentElement
       root.classList.add("theme-fading")
       clearTimeout(timer)
-      timer = setTimeout(() => root.classList.remove("theme-fading"), 500)
+      timer = setTimeout(() => root.classList.remove("theme-fading"), 900)
     },
     true, // capture: runs before the button's own click handler
   )

@@ -71,7 +71,7 @@ html::after {
   pointer-events: none;
   background: rgba(26, 25, 23, 0.88);
   opacity: 0;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.7s ease-in;
 }
 html[saved-theme="dark"]::after {
   opacity: 1;
@@ -99,6 +99,20 @@ footer {
 footer ul {
   justify-content: flex-end;
   margin-top: 0;
+}
+
+// Copyright notice, centered at the bottom of the screen at all times
+body::after {
+  content: "© 2026 anthonylied";
+  position: fixed;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: var(--gray);
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 50;
 }
 
 // Hide the link icon that appears next to headings on hover
@@ -243,6 +257,8 @@ article img:not(a img) {
   }
 }
 
+// Text leads (ease-out) and backgrounds follow (ease-in), so the two are never both
+// light or both dark partway through the switch.
 // Fade colors when switching light/dark. The class is only on for the moment of the
 // switch (quartz/static/theme-fade.js), so pages don't animate when they first load.
 html.theme-fading,
@@ -250,18 +266,44 @@ html.theme-fading *,
 html.theme-fading *::before,
 html.theme-fading *::after {
   transition:
-    background-color 0.4s ease,
-    color 0.4s ease,
-    border-color 0.4s ease,
-    fill 0.4s ease,
-    stroke 0.4s ease !important;
+    background-color 0.7s ease-in,
+    color 0.7s ease-out,
+    border-color 0.7s ease-in,
+    text-decoration-color 0.7s ease-out,
+    fill 0.7s ease-out,
+    stroke 0.7s ease-out !important;
 }
 
-// Dark mode button pinned to the top right of the screen
+// Dark mode button icons: crossfade (with a little turn) instead of snapping.
+// Both icons stay in place; only one is visible at a time.
+html .darkmode > svg {
+  display: inline !important;
+  transition:
+    opacity 0.45s ease,
+    transform 0.45s ease !important;
+}
+html .darkmode > .dayIcon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+html .darkmode > .nightIcon {
+  opacity: 0;
+  transform: rotate(-70deg) scale(0.6);
+}
+html[saved-theme="dark"] .darkmode > .dayIcon {
+  opacity: 0;
+  transform: rotate(70deg) scale(0.6);
+}
+html[saved-theme="dark"] .darkmode > .nightIcon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+// Dark mode button pinned to the bottom left of the screen
 .darkmode {
   position: fixed !important;
-  top: calc(env(safe-area-inset-top, 0px) + 1.25rem);
-  right: 1.5rem;
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 1.25rem);
+  left: 1.5rem;
   z-index: 100;
   margin: 0 !important;
 }
@@ -431,15 +473,17 @@ html.theme-fading *::after {
     padding: 0.5rem 1rem;
     gap: 0.75rem;
   }
+  // The menu stays shut unless it was opened with the ☰ button (which sets aria-expanded).
+  // Each link click briefly resets the explorer to "open" before its script closes it
+  // again, and the close animation made the menu flash across the page.
+  html .explorer:not([aria-expanded="true"]) > .explorer-content {
+    transform: translateX(-100vw);
+    visibility: hidden;
+  }
   html .sidebar.left .page-title {
     margin: 0;
     font-size: 1.3rem;
     white-space: nowrap;
-  }
-  // The dark mode button sits in the bar instead of floating over the page
-  .darkmode {
-    position: static !important;
-    margin-right: 0.25rem !important;
   }
   // Footer links at the end of the page instead of pinned over the text
   footer {
@@ -451,4 +495,33 @@ html.theme-fading *::after {
   footer ul {
     justify-content: center;
   }
+}
+
+// Dates are hidden by default. To show the date under a post's title, add this to its frontmatter:
+//   cssclasses:
+//     - show-date
+#quartz-body:not(:has(article.show-date)) .content-meta {
+  display: none;
+}
+// Dates in the lists of posts (folder pages, recent posts) are always hidden
+#quartz-body p.meta {
+  display: none;
+}
+
+// A folder page can hide the automatic list of its contents (to write its own links instead):
+//   cssclasses:
+//     - hide-listing
+.popover-hint:has(> article.hide-listing) > .page-listing {
+  display: none;
+}
+
+// With the dates hidden, the post title was left in the date's narrow column (8em) and wrapped.
+li.section-li > .section {
+  grid-template-columns: 1fr !important;
+}
+
+// The hover previews live outside #quartz-body, so they need the same date rules
+.popover-inner:not(:has(article.show-date)) .content-meta,
+.popover-inner p.meta {
+  display: none;
 }

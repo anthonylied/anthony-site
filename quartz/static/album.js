@@ -57,9 +57,34 @@
     let index = 0
     let afterShow = () => {}
 
+    // A photo that hasn't loaded yet has no size, so switching to it would collapse the
+    // frame, shrink the page and make the browser jump the scroll position. Hold the frame
+    // at its current size until the new photo arrives.
+    let holdToken = 0
+    const holdSizeUntilLoaded = (img) => {
+      const token = ++holdToken
+      stage.style.minHeight = `${stage.offsetHeight}px`
+      stage.style.minWidth = `${stage.offsetWidth}px`
+      const release = () => {
+        if (token !== holdToken) return // a later swipe is holding it now
+        stage.style.minHeight = ""
+        stage.style.minWidth = ""
+      }
+      img.addEventListener("load", release, { once: true })
+      img.addEventListener("error", release, { once: true })
+    }
+
     const show = (i) => {
-      index = Math.max(0, Math.min(total - 1, i))
+      const nextIndex = Math.max(0, Math.min(total - 1, i))
+      const incoming = imgs[nextIndex]
+      if (nextIndex !== index && !(incoming.complete && incoming.naturalWidth)) {
+        holdSizeUntilLoaded(incoming)
+      }
+      index = nextIndex
       imgs.forEach((img, j) => (img.hidden = j !== index))
+      // Start loading the neighbours now so the next swipe is usually instant
+      if (imgs[index - 1]) imgs[index - 1].loading = "eager"
+      if (imgs[index + 1]) imgs[index + 1].loading = "eager"
       caption.textContent = imgs[index].dataset.caption ?? ""
       caption.hidden = !caption.textContent
       afterShow()

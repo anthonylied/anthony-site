@@ -1,0 +1,10 @@
+{
+  // Drag or paste an image into a post and VS Code copies it into content/images/
+  "markdown.copyFiles.destination": {
+    "/content/**/*.md": "/content/images/"
+  },
+  // If a file with that name already exists, save as image-1.png etc. instead of replacing it
+  "markdown.copyFiles.overwriteBehavior": "nameIncrementally",
+  "markdown.editor.drop.copyIntoWorkspace": "mediaFiles",
+  "markdown.editor.filePaste.copyIntoWorkspace": "mediaFiles"
+}
