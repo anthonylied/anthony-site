@@ -8,7 +8,6 @@ here, you will find some of my thoughts and takes on things
 but nothing too crazy, mostly about things I find cool and stuff lol
 
 ![[johnnygogo.jpg|right|200]]
-*steel ball run photo*
 
 ## where to start
 
@@ -20,6 +19,4 @@ but nothing too crazy, mostly about things I find cool and stuff lol
 - i am anthony
 - i am currently 20 years old
 - i attend the university of washington
-- i like sports
-- i like my friends and family
 - i lke cheeling
