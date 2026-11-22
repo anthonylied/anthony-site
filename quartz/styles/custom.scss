@@ -525,3 +525,23 @@ li.section-li > .section {
 .popover-inner p.meta {
   display: none;
 }
+
+// Phones: the dark mode button and © line stay out of the way until you reach the bottom of
+// the page (quartz/static/theme-fade.js sets .at-page-bottom).
+@media (max-width: 800px) {
+  .darkmode,
+  body::after {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .darkmode {
+    pointer-events: none;
+  }
+  html.at-page-bottom .darkmode,
+  html.at-page-bottom body::after {
+    opacity: 1;
+  }
+  html.at-page-bottom .darkmode {
+    pointer-events: auto;
+  }
+}

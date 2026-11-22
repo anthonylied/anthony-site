@@ -16,4 +16,18 @@
     },
     true, // capture: runs before the button's own click handler
   )
+  // On phones the dark mode button and © line only show once you reach the bottom of the page
+  // (the CSS only uses this class on narrow screens).
+  const root = document.documentElement
+  const updateAtBottom = () => {
+    const atBottom = window.innerHeight + window.scrollY >= root.scrollHeight - 40
+    root.classList.toggle("at-page-bottom", atBottom)
+  }
+  window.addEventListener("scroll", updateAtBottom, { passive: true })
+  window.addEventListener("resize", updateAtBottom)
+  window.addEventListener("load", updateAtBottom)
+  document.addEventListener("nav", () => setTimeout(updateAtBottom, 100))
+  // Images and fonts change the page height after load
+  if (window.ResizeObserver) new ResizeObserver(updateAtBottom).observe(document.body)
+  updateAtBottom()
 })()
